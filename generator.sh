@@ -15,7 +15,7 @@ set -euo pipefail
 API="https://api.cloudflareclient.com/v0i1909051800"
 ENDPOINT="162.159.192.1:500"    # стандартный WARP endpoint, оставляем по умолчанию
 DEFAULT_DNS="1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001"
-I1_BYTES="${I1_BYTES:-512}"     # 256 bytes -> 512 hex chars. Увеличь если нужно.
+I1_BYTES="${I1_BYTES:-1250}"     # 256 bytes -> 512 hex chars. Увеличь если нужно.
 
 # Amnezia параметры (типичные)
 S1=0
