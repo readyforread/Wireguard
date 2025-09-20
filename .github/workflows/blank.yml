@@ -1,35 +1,45 @@
-
 name: Generate WireGuard Config
 
 on:
   schedule:
     - cron: "0 */12 * * *"   # каждые 12 часов
-  workflow_dispatch:         # возможность запускать вручную
+  workflow_dispatch:         # запуск вручную
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Клонируем репозиторий
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true  # нужно для пуша через GITHUB_TOKEN
 
+      # 2. Устанавливаем зависимости (для генератора)
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y qrencode
+        run: sudo apt-get update && sudo apt-get install -y qrencode curl
 
+      # 3. Скачиваем генератор
       - name: Download warp generator
         run: curl -o warp_generator.sh https://raw.githubusercontent.com/ImMALWARE/bash-warp-generator/main/warp_generator.sh
 
       - name: Make generator executable
         run: chmod +x warp_generator.sh
 
+      # 4. Генерируем новый конфиг
       - name: Generate config
         run: ./warp_generator.sh > warp.conf
 
+      # 5. Коммитим и пушим только если есть изменения
       - name: Commit and push new config
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add warp.conf
-          git commit -m "Update WireGuard config [$(date)]" || echo "No changes"
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update WireGuard config [$(date)]"
+            git push
+          fi
