@@ -1,0 +1,32 @@
+
+name: Generate WG config
+
+on:
+  workflow_dispatch:   # запуск вручную из Actions
+  schedule:
+    - cron: "0 */12 * * *"  # каждые 12 часов
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install jupyter nbconvert colabtools pydrive
+
+      - name: Run Colab notebook
+        run: |
+          jupyter nbconvert --to notebook --execute wg_generator.ipynb \
+            --output wg_generator_output.ipynb
+        env:
+          SERVICE_JSON: ${{ secrets.SERVICE_JSON }}
+          FOLDER_ID: ${{ secrets.FOLDER_ID }}
