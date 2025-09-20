@@ -24,18 +24,18 @@ jobs:
           ./generator.sh
 
       - name: Commit and push warp.conf
-  env:
-    GH_PAT: ${{ secrets.GH_PAT }}
-  run: |
-    git config --global user.name "readyforread"
-    git config --global user.email "arm2000arms@gmail.com"
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config --global user.name "readyforread"
+          git config --global user.email "arm2000arms@gmail.com"
 
-    git add warp.conf
+          git add warp.conf
 
-    if git diff --cached --quiet; then
-      echo "No changes to commit"
-    else
-      COMMIT_MSG="Update WireGuard config [$(date -u +'%Y-%m-%d %H:%M:%S')]"
-      git commit -m "$COMMIT_MSG"
-      git push https://readyforread:$GH_PAT@github.com/readyforread/Wireguard.git HEAD:main
-    fi
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            COMMIT_MSG="Update WireGuard config [$(date -u +'%Y-%m-%d %H:%M:%S')]"
+            git commit -m "$COMMIT_MSG"
+            git push https://readyforread:$GH_PAT@github.com/readyforread/Wireguard.git HEAD:main
+          fi
