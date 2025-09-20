@@ -28,6 +28,7 @@ jobs:
         run: |
           git config --global user.name "readyforread"
           git config --global user.email "arm2000arms@gmail.com"
+          git config --global --unset credential.helper
           git add warp.conf
           if git diff --cached --quiet; then
             echo "No changes to commit"
