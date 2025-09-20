@@ -22,16 +22,16 @@ peer_pub=$(echo "$response" | jq -r '.result.config.peers[0].public_key')
 client_ipv4=$(echo "$response" | jq -r '.result.config.interface.addresses.v4')
 client_ipv6=$(echo "$response" | jq -r '.result.config.interface.addresses.v6')
 
-# Формируем конфиг
-conf=$(cat <<'EOM'
+# Формируем конфиг (без одинарных кавычек)
+conf=$(cat <<EOM
 [Interface]
-PrivateKey = '"${priv}"'
-Address = '"${client_ipv4}, ${client_ipv6}"'
+PrivateKey = ${priv}
+Address = ${client_ipv4}, ${client_ipv6}
 DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 MTU = 1280
 
 [Peer]
-PublicKey = '"${peer_pub}"'
+PublicKey = ${peer_pub}
 AllowedIPs = 0.0.0.0/0, ::/0
 Endpoint = 162.159.192.1:500
 EOM
