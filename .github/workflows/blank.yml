@@ -2,11 +2,11 @@ name: Generate WireGuard Config
 
 on:
   schedule:
-    - cron: "0 */12 * * *"   # каждые 12 часов
-  workflow_dispatch:         # запуск вручную
+    - cron: "0 */12 * * *"   # запуск каждые 12 часов
+  workflow_dispatch:         # запуск вручную через Actions
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,13 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true  # нужно для пуша через GITHUB_TOKEN
+          persist-credentials: true  # позволяет пушить с GITHUB_TOKEN
 
-      # 2. Устанавливаем зависимости (для генератора)
+      # 2. Устанавливаем зависимости для генератора
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y qrencode curl
 
-      # 3. Скачиваем генератор
+      # 3. Скачиваем генератор конфигов
       - name: Download warp generator
         run: curl -o warp_generator.sh https://raw.githubusercontent.com/ImMALWARE/bash-warp-generator/main/warp_generator.sh
 
