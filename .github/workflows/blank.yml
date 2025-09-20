@@ -1,15 +1,16 @@
-name: Update WireGuard Config
+name: Generate WireGuard Config
 
+# Запуск каждые 5 часов и вручную
 on:
   schedule:
-    - cron: '0 */5 * * *'  # Каждые 5 часов
-  workflow_dispatch:      # Позволяет запускать вручную
+    - cron: "0 */5 * * *"  # каждые 5 часов
+  workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install dependencies
@@ -19,7 +20,6 @@ jobs:
 
       - name: Generate WireGuard config
         run: |
-          #!/bin/bash
           set -e
           priv="${1:-$(wg genkey)}"
           pub="${2:-$(echo "${priv}" | wg pubkey)}"
@@ -49,7 +49,7 @@ EOM
           echo "$conf" > warp.conf
           echo "✅ Конфиг сохранён в warp.conf"
 
-      - name: Commit and push
+      - name: Commit and push config
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
@@ -60,5 +60,4 @@ EOM
             echo "No changes to commit"
           else
             git commit -m "Update WireGuard config [$(date -u)]"
-            git push https://$GH_PAT@github.com/readydorread/Wireguard.git HEAD:main
-          fi
+            git push https://$GH_PAT@github.com/readyforread/Wireguard.git HEAD:main
